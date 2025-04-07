@@ -1,12 +1,12 @@
 <?php
 
-namespace VendorName\Skeleton\Commands;
+namespace JGamboa\NileLaravelServer\Commands;
 
 use Illuminate\Console\Command;
 
-class SkeletonCommand extends Command
+class NileLaravelServerCommand extends Command
 {
-    public $signature = 'skeleton';
+    public $signature = 'nile-server:about';
 
     public $description = 'My command';
 
