@@ -21,6 +21,12 @@ abstract class NileUserModel extends Authenticatable
     const string UPDATED_AT = 'updated';
     const string DELETED_AT = 'deleted';
 
+    public function tenants(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        $tenantModel = config('nile-laravel-server.models.tenant');
+        return $this->belongsToMany((new $tenantModel)::class, 'users.tenant_users', 'user_id', 'tenant_id');
+    }
+
     public function hasVerifiedEmail(): bool
     {
         return !is_null($this->email_verified);

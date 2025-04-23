@@ -13,36 +13,27 @@ final class TenantController extends Controller
 {
     public function create(Request $request)
     {
-        $data = $request->only(['id', 'name']);
+        $data = $request->only(['name']);
         $userId = $request->user()->id;
 
-        \App::instance('tenant_id', $data["id"]);
-
         $tenants = DB::select(
-            'INSERT INTO tenants (id, name) VALUES (?, ?) RETURNING *',
-            [$data['id'], $data['name']]);
+            'INSERT INTO tenants (name) VALUES (?) RETURNING *', [$data['name']]);
 
         Log::info('/*****************************************/');
         Log::info('created tenant: '.print_r($tenants, true));
         Log::info('/*****************************************/');
 
-        DB::table('tenant_users')->insert([
+        DB::table('users.tenant_users')->insert([
             'tenant_id' => $tenants[0]->id,
             'user_id' => $userId,
         ]);
 
-        return response()->json($tenants);
+        return response()->json($tenants[0]);
     }
 
-    public function list(Request $request)
+    public function index()
     {
-        $userId = $request->user()->id;
-
-        $tenants = DB::table('tenants')
-            ->join('tenant_users', 'tenants.id', '=', 'tenant_users.tenant_id')
-            ->where('tenant_users.user_id', $userId)
-            ->get();
-
-        return response()->json($tenants);
+        $user = auth()->user();
+        return response()->json($user->tenants);
     }
 }

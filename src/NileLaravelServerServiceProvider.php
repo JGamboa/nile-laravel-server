@@ -21,6 +21,7 @@ class NileLaravelServerServiceProvider extends PackageServiceProvider
             ->name('laravel-nile-server')
             ->hasConfigFile('nile-laravel-server')
             ->hasViews()
+            ->hasTranslations()
             ->hasMigration('create_nile_laravel_server_data')
             ->hasCommand(NileLaravelServerCommand::class)
             ->hasRoute('api')

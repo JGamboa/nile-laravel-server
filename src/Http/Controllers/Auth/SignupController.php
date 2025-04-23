@@ -12,13 +12,12 @@ class SignupController extends Controller
 {
     public function register(Request $request)
     {
+        $userModel = config('auth.providers.users.model');
         $data = $request->validate([
             'name' => ['required', 'string'],
-            'email' => ['required', 'email', 'unique:users.users,email'],
+            'email' => ['required', 'email','unique:'. (new $userModel)::class .',email'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
-
-        $userModel = config('auth.providers.users.model');
 
         $user = (new $userModel)->create([
             'name' => $data['name'],
