@@ -17,9 +17,23 @@ final class TenantScope implements Scope
      */
     public function apply(Builder $builder, Model $model): void
     {
-        $tenantId = App::make('tenant_id');
-        if ($tenantId) {
+        if (App::bound('tenant_id')) {
+            $tenantId = App::make('tenant_id');
             $builder->where($model->getTable().'.tenant_id', $tenantId);
+        }
+    }
+
+    public function extend(Builder $builder)
+    {
+        if (App::bound('tenant_id')) {
+            $tenantId = App::make('tenant_id');
+
+            foreach (['update', 'delete'] as $method) {
+                $builder->macro($method, function (Builder $builder, ...$args) use ($tenantId, $method) {
+                    $builder->where($builder->getModel()->getTable().'.tenant_id', $tenantId);
+                    return $builder->{$method.'WithoutTenant'}(...$args);
+                });
+            }
         }
     }
 }

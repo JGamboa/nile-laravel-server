@@ -14,7 +14,7 @@ final class NileContextMiddleware
     {
         if ($request->hasHeader('x-nile-tenant-id')) {
             if( ! $this->userHasAccessToTenant($request->header('x-nile-tenant-id')) ) {
-                abort(403, __('messages.tenant_forbidden'));
+                abort(403, __('nile-server::messages.tenant_forbidden'));
             }
 
             $request->attributes->set('nile_tenant_id', $request->header('x-nile-tenant-id'));

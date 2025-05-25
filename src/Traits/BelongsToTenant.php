@@ -18,6 +18,12 @@ trait BelongsToTenant
                 $model->tenant_id = App::get('tenant_id');
             }
         });
+
+        static::updating(function ($model) {
+            if (App::has('tenant_id')) {
+                $model->tenant_id = App::get('tenant_id');
+            }
+        });
     }
 
     public function initializeBelongsToTenant(): void

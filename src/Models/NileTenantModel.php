@@ -19,4 +19,10 @@ abstract class NileTenantModel extends Model
     const string UPDATED_AT = 'modified';
 
     const string DELETED_AT = 'deleted';
+
+    public function users(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        $userModel = 'App\Models\User';
+        return $this->belongsToMany((new $userModel)::class, 'users.tenant_users', 'tenant_id', 'user_id');
+    }
 }

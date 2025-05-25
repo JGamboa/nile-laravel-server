@@ -21,7 +21,7 @@ class TenantUserController extends Controller
         $tenant = $tenantModel::find($this->getTenantId());
 
         if (!$tenant) {
-            return response()->json(['error' => __('messages.tenant_not_found')], 404);
+            return response()->json(['error' => __('nile-server::messages.tenant_not_found')], 404);
         }
 
         $users = $tenant->users;
@@ -40,14 +40,14 @@ class TenantUserController extends Controller
 
         if($tenant->users()->where('id', $validated['user_id'])->exists()) {
             return response()->json([
-                'message' => __('messages.user_already_in_tenant'),
+                'message' => __('nile-server::messages.user_already_in_tenant'),
             ], 409);
         }
 
         $tenant->users()->attach($validated['user_id']);
 
         return response()->json([
-            'message' => __('messages.user_added_to_tenant'),
+            'message' => __('nile-server::messages.user_added_to_tenant'),
         ]);
     }
 
@@ -62,14 +62,14 @@ class TenantUserController extends Controller
 
         if(!$tenant->users()->where('id', $validated['user_id'])->exists()) {
             return response()->json([
-                'message' => __('messages.user_not_in_tenant'),
+                'message' => __('nile-server::messages.user_not_in_tenant'),
             ], 409);
         }
 
         $tenant->users()->detach($validated['user_id']);
 
         return response()->json([
-            'message' => __('messages.user_removed_from_tenant'),
+            'message' => __('nile-server::messages.user_removed_from_tenant'),
         ]);
     }
 }
