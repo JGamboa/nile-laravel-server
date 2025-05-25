@@ -16,17 +16,16 @@ Route::prefix('api/nile')->middleware('api')->group(function () {
     Route::put('users/me', [UserProfileController::class, 'update']);
 
     Route::middleware(NileContextMiddleware::class)->group(function (){
-        Route::post('tenants/users', [TenantUserController::class, 'store']);
         Route::get('tenants/users/{userId}', [TenantUserController::class, 'show']);
-        Route::delete('tenants/users', [TenantUserController::class, 'destroy']);
+        Route::put('tenants/users/{userId}', [TenantUserController::class, 'update']);
         Route::get('tenants/users', [TenantUserController::class, 'index']);
+        Route::post('tenants/users', [TenantUserController::class, 'store']);
+        Route::delete('tenants/users', [TenantUserController::class, 'destroy']);
     });
+    
+    Route::apiResource('tenants', TenantController::class)->middleware('auth:sanctum');
 
-    Route::post('tenants', [TenantController::class, 'create'])->middleware('auth:sanctum');
-    Route::get('tenants', [TenantController::class, 'index'])->middleware('auth:sanctum');
-
-
-    Route::get('user/tenants', [UserTenantController::class, 'list'])
+    Route::get('user/tenants', [UserTenantController::class, 'index'])
         ->middleware('auth:sanctum');
 
     Route::prefix('auth')->group(function () {

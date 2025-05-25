@@ -3,6 +3,7 @@
 namespace JGamboa\NileLaravelServer\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\Routing\Controller;
 use JGamboa\NileLaravelServer\Traits\ResolvesTenant;
 
@@ -48,6 +49,35 @@ class TenantUserController extends Controller
         }
 
         $user = $tenant->users()->where('id', $userId)->first();
+
+        return response()->json($user);
+    }
+
+    public function update(Request $request, string $userId)
+    {
+        $userModel = config('auth.providers.users.model');
+
+        $tenantModel = config('nile-laravel-server.models.tenant');
+        $tenant = $tenantModel::findOrFail($this->getTenantId());
+
+        if(!$tenant->users()->where('id', $userId)->exists()) {
+            return response()->json([
+                'message' => __('nile-server::messages.user_not_in_tenant'),
+            ], 409);
+        }
+
+        $validated = $request->validate([
+            'name' => 'required|min:3|string|max:255',
+            'status' => 'sometimes|boolean',
+            'email' => [
+                'required',
+                'email',
+                Rule::unique((new $userModel)::class, 'email')->ignore($userId)
+            ],
+        ]);
+
+        $user = $userModel::findOrFail($userId);
+        $user->update($validated);
 
         return response()->json($user);
     }
