@@ -15,7 +15,7 @@ class TenantUserController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index()
+    public function index(Request $request)
     {
         $tenantModel = config('nile-laravel-server.models.tenant');
         $tenant = $tenantModel::find($this->getTenantId());
@@ -24,9 +24,32 @@ class TenantUserController extends Controller
             return response()->json(['error' => __('nile-server::messages.tenant_not_found')], 404);
         }
 
-        $users = $tenant->users;
+        $perPage = $request->input('per_page', 10);
 
-        return response()->json($users);
+
+        $users = $tenant->users();
+
+        if ($perPage === 'all' || (int) $perPage === 0) {
+            return response()->json($users->get());
+        }
+
+        return response()->json($users->paginate((int) $perPage));
+    }
+
+    public function show(string $userId)
+    {
+        $tenantModel = config('nile-laravel-server.models.tenant');
+        $tenant = $tenantModel::find($this->getTenantId());
+
+        if(!$tenant->users()->where('id', $userId)->exists()) {
+            return response()->json([
+                'message' => __('nile-server::messages.user_not_in_tenant'),
+            ], 409);
+        }
+
+        $user = $tenant->users()->where('id', $userId)->first();
+
+        return response()->json($user);
     }
 
     public function store(Request $request)

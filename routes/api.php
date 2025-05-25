@@ -14,10 +14,13 @@ use JGamboa\NileLaravelServer\Http\Middleware\NileContextMiddleware;
 
 Route::prefix('api/nile')->middleware('api')->group(function () {
     Route::put('users/me', [UserProfileController::class, 'update']);
-    Route::post('tenants/users', [TenantUserController::class, 'store']);
-    Route::delete('tenants/users', [TenantUserController::class, 'destroy']);
-    Route::get('tenants/users', [TenantUserController::class, 'index'])
-        ->middleware(['auth:sanctum', NileContextMiddleware::class]);
+
+    Route::middleware(NileContextMiddleware::class)->group(function (){
+        Route::post('tenants/users', [TenantUserController::class, 'store']);
+        Route::get('tenants/users/{userId}', [TenantUserController::class, 'show']);
+        Route::delete('tenants/users', [TenantUserController::class, 'destroy']);
+        Route::get('tenants/users', [TenantUserController::class, 'index']);
+    });
 
     Route::post('tenants', [TenantController::class, 'create'])->middleware('auth:sanctum');
     Route::get('tenants', [TenantController::class, 'index'])->middleware('auth:sanctum');
