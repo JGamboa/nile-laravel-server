@@ -8,4 +8,5 @@ return [
     'user_already_in_tenant' => 'Usuario ya en el inquilino.',
     'user_not_in_tenant' => 'Usuario no en el inquilino.',
     'profile_updated' => 'Perfil actualizado con éxito.',
+    'user_deleted' => 'Usuario eliminado con éxito.'
 ];

@@ -8,4 +8,5 @@ return [
     'user_already_in_tenant' => 'User already in tenant.',
     'user_not_in_tenant' => 'User not in tenant.',
     'profile_updated' => 'Profile updated successfully.',
+    'user_deleted' => 'User deleted successfully.'
 ];
