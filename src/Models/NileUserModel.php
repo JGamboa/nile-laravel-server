@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace JGamboa\NileLaravelServer\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -14,7 +15,7 @@ abstract class NileUserModel extends Authenticatable
     use HasUuids;
     use HasApiTokens;
     use SoftDeletes;
-
+    use Notifiable;
     protected $table = 'users.users';
 
     const string CREATED_AT = 'created';

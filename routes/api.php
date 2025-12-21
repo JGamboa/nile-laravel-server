@@ -17,11 +17,17 @@ use JGamboa\NileLaravelServer\Http\Middleware\NileContextMiddleware;
 Route::prefix('api/nile')->middleware('api')->group(function () {
     Route::put('users/me', [UserProfileController::class, 'update']);
 
-    Route::apiResource('users', TenantInternalUserController::class)->middleware(['auth:sanctum', NileContextMiddleware::class]);
+
+    Route::middleware(['auth:sanctum', NileContextMiddleware::class])->group(function () {
+        Route::get('users/{userId}', [TenantUserController::class, 'show']);
+        Route::put('users/{userId}', [TenantUserController::class, 'update']);
+        Route::delete('users/{userId}', [TenantInternalUserController::class, 'destroy']);
+        Route::get('users', [TenantUserController::class, 'index']);
+        Route::post('users', [TenantInternalUserController::class, 'store']);
+    });
 
     Route::prefix('admin')->group(function (){
         Route::middleware(NileContextMiddleware::class)->group(function (){
-            Route::apiResource('users', TenantInternalUserController::class);
             Route::get('tenants/users/{userId}', [TenantUserController::class, 'show']);
             Route::put('tenants/users/{userId}', [TenantUserController::class, 'update']);
             Route::get('tenants/users', [TenantUserController::class, 'index']);
